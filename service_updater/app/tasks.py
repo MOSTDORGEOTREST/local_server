@@ -470,25 +470,33 @@ def report_parser():
     bulk(reports)
 
 def parser(deelay=None):
-
+    print("sf")
     def f():
         prize_dates = [
             date(year=dt.year, month=dt.month, day=25) for dt in rrule.rrule(
                 rrule.MONTHLY, dtstart=date(2020, 5, 1), until=date.today()
             )]
-
-        for i in prize_dates:
-            prize_parser(i)
-        print("successful update prizes")
+        try:
+            for i in prize_dates:
+                prize_parser(i)
+            print("successful update prizes")
+        except Exception as err:
+            print('prizes error ', err)
 
         tables.works.__table__.drop(engine)
         tables.works.__table__.create(engine)
 
-        courses_parser()
-        print("successful update courses")
+        try:
+            courses_parser()
+            print("successful update courses")
+        except Exception as err:
+            print('courses error ', err)
 
-        report_parser()
-        print("successful update reports")
+        try:
+            report_parser()
+            print("successful update reports")
+        except Exception as err:
+            print('reports error ', err)
 
     if not deelay:
         f()
